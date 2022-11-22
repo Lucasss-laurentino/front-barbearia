@@ -1,0 +1,8 @@
+.cards-assets {
+    width: 18rem;
+}
+
+.scroll {
+    overflow-y: scroll;
+    max-height: 150px;
+}

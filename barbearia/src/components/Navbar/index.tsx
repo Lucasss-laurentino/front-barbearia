@@ -5,6 +5,11 @@ interface Props {
 }
 export default function Navbar({show}: Props) {
 
+    // Logout
+    const logout = () => {
+        sessionStorage.setItem('token', '');
+        window.location.href='/'
+    }
 
     return (
         <nav className="navbar navbar-expand-sm navbar-primary bg-primary">
@@ -34,7 +39,7 @@ export default function Navbar({show}: Props) {
             
                     <li className="nav-item">
             
-                        <a className="nav-link text-white" href="#">Sair</a>
+                        <button className="nav-link text-white bg-primary border border-primary" onClick={logout}>Sair</button>
             
                     </li>
             

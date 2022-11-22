@@ -56,7 +56,7 @@ export default function Login() {
 
             } else {
 
-                sessionStorage.setItem('user', resposta.data[0])
+                sessionStorage.setItem('user', resposta.data[0].id)
                 sessionStorage.setItem('token', resposta.data[1])
 
                 window.location.href='/index'
