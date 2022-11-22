@@ -1,26 +1,47 @@
 import './Navbar.css';
 
-export default function Navbar() {
+interface Props {
+    show: () => void
+}
+export default function Navbar({show}: Props) {
+
+
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a className="navbar-brand" href="#">Barbearia</a>
+        <nav className="navbar navbar-expand-sm navbar-primary bg-primary">
+            <a className="navbar-brand mx-3 text-white" href="#"><strong>Barbearia</strong></a>
+            
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            
                 <span className="navbar-toggler-icon"></span>
+            
             </button>
 
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <div className="collapse navbar-collapse justify-content-end mx-2" id="navbarSupportedContent">
+            
                 <ul className="navbar-nav mr-auto">
+            
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Meu Horário</a>
+            
+                        <button className="nav-link bg-primary border border-primary text-white" >Meu Horário</button>
+            
                     </li>
+            
                     <li className="nav-item">
-                        <a className="nav-link" href="#">+Barbeiro</a>
+            
+                    <button className="nav-link bg-primary border border-primary text-white" onClick={show}>+Barbeiro</button>
+            
                     </li>
+            
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Sair</a>
+            
+                        <a className="nav-link text-white" href="#">Sair</a>
+            
                     </li>
+            
                 </ul>
+            
             </div>
+
         </nav>
     )
 }

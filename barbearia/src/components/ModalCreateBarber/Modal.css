@@ -1,0 +1,16 @@
+.imagem-de-fundo {
+    background-image: url('../../../public/img/login.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top;
+}
+
+.transparencia {
+    opacity: 0.9;
+    backdrop-filter: blur(1px);
+}
+
+.transparencia-button {
+    opacity: 0.7;
+    backdrop-filter: blur(1px);
+}
