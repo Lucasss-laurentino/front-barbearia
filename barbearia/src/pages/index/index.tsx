@@ -6,6 +6,8 @@ import './Index.css';
 import Card from '../../components/Card';
 import Barber from '../../interfaces/Barber';
 import Hours from '../../interfaces/Hours';
+import ModalHourReserved from '../../components/ModalHourReserved';
+import ModalEditBarber from '../../components/ModalEditBarber';
 
 export default function Index() {
 
@@ -16,8 +18,15 @@ export default function Index() {
     const [barbers, setBarbers] = useState<Barber[]>([]);
     const [hours, setHours] = useState<Hours[]>([]);
 
-    // Hour reserved
+    // Modal Hour Reserved
+    const [modalHourReserved, setModalHourReserved] = useState(false);
+
+    // Hour and barber reserved
     const [hourReserved, setHourReserved] = useState<undefined | Hours>();
+    const [barberReserved, setBarberReserved] = useState<undefined | Barber>();
+
+    // Pegando session storage que tem o id do user
+    const userId = sessionStorage.getItem('user');
 
 
     useEffect(() => {
@@ -31,9 +40,15 @@ export default function Index() {
             window.location.href='/';
         
         })
-    }, []);
 
-    console.log(hourReserved)
+        http.post('getHourReserved', {userId}).then((response) => {
+            if(response.data.length != 0){
+                setHourReserved(response.data[0]);
+                setBarberReserved(response.data[1]);    
+            } 
+        })
+
+    }, []);
 
     return (
 
@@ -45,14 +60,32 @@ export default function Index() {
             
             setBarbers={(barbers) => setBarbers(barbers)}
         />
+
+        <ModalHourReserved 
+            modalHourReserved={modalHourReserved} 
+            setModalHourReserved={() => setModalHourReserved(false)}
         
-        <Navbar show={() => setShow(true)} />
+            hourReserved={hourReserved}
+            barberReserved={barberReserved}
+
+            setHourReserved={() => setHourReserved(undefined)}
+            setBarberReserved={() => setBarberReserved(undefined)}
+            
+            setHours={(hours) => setHours(hours)}
+        />
+
+        <Navbar 
+            show={() => setShow(true)}
+            setModalHourReserved={() => setModalHourReserved(true)}
+        />
 
         <Card 
             barbers={barbers} 
+            setBarbers={(barbers) => setBarbers(barbers)}
             hours={hours} 
             setHours={(hour) => setHours(hour)}
             setHourReserved={(hourReserved) => setHourReserved(hourReserved)}
+            setBarberReserved={(barberReserved) => setBarberReserved(barberReserved)}
         />
 
     </>

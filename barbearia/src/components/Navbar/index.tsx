@@ -1,9 +1,10 @@
 import './Navbar.css';
 
 interface Props {
-    show: () => void
+    show: () => void,
+    setModalHourReserved: () => void,
 }
-export default function Navbar({show}: Props) {
+export default function Navbar({show, setModalHourReserved}: Props) {
 
     // Logout
     const logout = () => {
@@ -27,7 +28,7 @@ export default function Navbar({show}: Props) {
             
                     <li className="nav-item">
             
-                        <button className="nav-link bg-primary border border-primary text-white" >Meu Horário</button>
+                        <button className="nav-link bg-primary border border-primary text-white" onClick={setModalHourReserved}>Meu Horário</button>
             
                     </li>
             
