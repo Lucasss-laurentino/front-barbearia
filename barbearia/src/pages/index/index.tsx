@@ -7,12 +7,15 @@ import Card from '../../components/Card';
 import Barber from '../../interfaces/Barber';
 import Hours from '../../interfaces/Hours';
 import ModalHourReserved from '../../components/ModalHourReserved';
-import ModalEditBarber from '../../components/ModalEditBarber';
 
 export default function Index() {
 
-    // Modal create barber
+    // Modal create barber or edit barber
     const [show, setShow] = useState<boolean>(false);
+
+    // barber data to edit 
+    const [barberEdit, setBarberEdit] = useState<Barber | undefined>(undefined); // sending for card open modal create
+
 
     // Card barber
     const [barbers, setBarbers] = useState<Barber[]>([]);
@@ -32,6 +35,7 @@ export default function Index() {
     useEffect(() => {
 
         http.get('index').then((response) => {
+            
             setBarbers([...response.data[0]]);
             setHours([...response.data[1]]);
         
@@ -54,11 +58,15 @@ export default function Index() {
 
     <>
     
-        <ModalCreateBarber
+        <ModalCreateBarber // or edit barber
             show={show} 
             onHide={() => setShow(false)}
             
             setBarbers={(barbers) => setBarbers(barbers)}
+
+            barberEdit={barberEdit}
+            setBarberEdit={(barber) => setBarberEdit(barber)}
+
         />
 
         <ModalHourReserved 
@@ -86,6 +94,9 @@ export default function Index() {
             setHours={(hour) => setHours(hour)}
             setHourReserved={(hourReserved) => setHourReserved(hourReserved)}
             setBarberReserved={(barberReserved) => setBarberReserved(barberReserved)}
+            openModalCreateForEdit={() => setShow(true)}
+            barberEdit={barberEdit}
+            setBarberEdit={(barber) => setBarberEdit(barber)}
         />
 
     </>

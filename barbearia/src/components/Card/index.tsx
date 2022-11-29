@@ -3,7 +3,6 @@ import http from '../../http';
 import Barber from '../../interfaces/Barber';
 import Hours from '../../interfaces/Hours';
 import ModalCreateHour from '../ModalCreateHour';
-import ModalEditBarber from '../ModalEditBarber';
 import './Card.css';
 
 interface Props {
@@ -13,13 +12,13 @@ interface Props {
     setHourReserved: (hourReserved: Hours) => void,
     setBarberReserved: (barberReserved: Barber) => void,
     setBarbers: (barbers: Barber[]) => void,
+    openModalCreateForEdit: () => void,
+    barberEdit: Barber | undefined,
+    setBarberEdit: (barber: Barber) => void,
 }
 
-export default function Card({ barbers, hours, setHours, setHourReserved, setBarberReserved, setBarbers}: Props) {
+export default function Card({ barbers, hours, setHours, setHourReserved, setBarberReserved, setBarbers, openModalCreateForEdit, barberEdit, setBarberEdit}: Props) {
 
-    // Modal Edit Barber
-    const [modalEditBarber, setModalEditBarber] = useState<boolean>(false);
-    const [barberEdit, setBarberEdit] = useState<Barber>(); // Enviando para card
 
 
     // State to 'Modal create Hour'
@@ -55,11 +54,18 @@ export default function Card({ barbers, hours, setHours, setHourReserved, setBar
 
     const openModalAndSendBarber = (barber: Barber) => {
 
+        openModalCreateForEdit();
         setBarberEdit(barber);
-        setModalEditBarber(true);
 
     }
 
+    /*
+    <ModalEditBarber
+    modalEditBarber={modalEditBarber}
+    setModalEditBarber={() => setModalEditBarber(false)}
+    barberEdit={barberEdit}
+    />
+    */
 
     return (
 
@@ -70,14 +76,6 @@ export default function Card({ barbers, hours, setHours, setHourReserved, setBar
                 barberId={barberId}
                 setHours={(hours) => setHours(hours)}
             />
-
-            <ModalEditBarber
-                modalEditBarber={modalEditBarber}
-                setModalEditBarber={() => setModalEditBarber(false)}
-                barberEdit={barberEdit}
-            />
-
-
 
             <section className='container mx-2 d-flex p-0 w-100'>
                 {barbers.map((barber) => {
@@ -108,7 +106,7 @@ export default function Card({ barbers, hours, setHours, setHourReserved, setBar
                                     {hours.map((hour) => {
                                         if (hour.barber_id === barber.id && !hour.reserved) {
                                             return (
-                                                <li className="list-group-item text-center" key={hour.id} onClick={() => reserve(hour.id)} >{hour.time}</li>
+                                                <li className="list-group-item text-center ponteiro" key={hour.id} onClick={() => reserve(hour.id)} >{hour.time}</li>
                                             );
                                         }
                                     })}
