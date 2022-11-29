@@ -1,7 +1,16 @@
-import { useState } from 'react';
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import {object, string} from "yup";
+import { useEffect, useState } from 'react';
 import http from '../../http';
 import './Login.css';
 import imgLogin from './login.png';
+
+// Config validate form
+const schema = object({
+    email: string().required("Campo obrigatório").email("Email inválido"),
+    password: string().required("Campo obrigatório").min(6, "Precisa de pelo menos 6 caracteres"),
+})
 
 export default function Login() {
 
@@ -9,26 +18,51 @@ export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    // Errors
+    const [errorEmail, setErrorEmail] = useState<any>();
+    const [errorPassword, setErrorPassword] = useState<any>();
+
     // create user message
     const [createUserSuccess, setCreateUserSuccess] = useState(''); 
     const [createUserError, setCreateUserError] = useState('');
 
-    // Login message
+    // Login error message
     const [loginErro, setLoginErro] = useState('');
 
-    // Function to create user
-    const createUser = () => {
-        
-        http.post('createUser', {email, password}).then((resposta) => {
+    // Yup
+    const { register, reset, handleSubmit, watch, formState: { errors } } = useForm({resolver: yupResolver(schema)});
 
-                setEmail('');
-            
-                setPassword('');
+
+    // Validando erros pelo use effect porques estava dando erro em renderizar "errors" direto no return
+    useEffect(() => {
+
+        if(errors?.email?.message){
+            setErrorEmail(errors?.email?.message)
+        } else {
+            setErrorEmail('')
+        }
+    
+        if(errors?.password?.message){
+            setErrorPassword(errors?.password?.message)
+        } else {
+            setErrorPassword('')
+
+        }
+    
+    
+    }, [errors?.email, errors?.password])
+
+    // Function to create user
+    const createUser = (data: any) => {
+                        
+        http.post('createUser', {data}).then((response) => {
+
+                reset();
 
                 setCreateUserError('');
                 
                 setCreateUserSuccess('Usuário criado com sucesso !');
-            
+
         }).catch(resposta => {
 
             setEmail('');
@@ -38,15 +72,18 @@ export default function Login() {
             setCreateUserSuccess('');
 
             setCreateUserError('Erro ao se cadastrar !');
-        })  
+        })
+
     }
 
     // Login function
-    const login = () => {
+    const login = (data: any) => {
 
-        http.post('login', {email, password}).then((resposta) => {
+        http.post('login', {data}).then((resposta) => {
             
             if(resposta.data === 'erro') {
+
+                reset();
 
                 setCreateUserError('');
                 
@@ -64,45 +101,52 @@ export default function Login() {
             }
             
         })
+        
     
     }
 
     return (
-        <main className='size d-flex align-items-center'>
 
+
+        <main className='size d-flex align-items-center'>
             <div className="container logo">
                 <img className='' src={imgLogin} width='80%' height='70%' alt="" />
             </div>
 
             <div className="container formulario">
                 <div className="container">
-                <form>
+                <form onSubmit={handleSubmit(createUser)}>
                     <div className="form-group my-2">
                         <label htmlFor="exampleInputEmail1">Email</label>
                         <input 
-                            value={email}
-                            onChange={(valor) => setEmail(valor.target.value)}
                             type="email" 
                             className="form-control" 
                             id="exampleInputEmail1" 
                             aria-describedby="emailHelp" 
                             placeholder="Email"
+                            {...register("email")}
                         />
+                        <p className="text-danger mx-0 my-2">
+                            {errorEmail}
+                        </p>
                     </div>
                     <div className="form-group my-2">
                         <label htmlFor="exampleInputPassword1">Senha</label>
                         <input
-                            value={password}
-                            onChange={(valor) => setPassword(valor.target.value)} 
                             type="password" 
                             className="form-control" 
                             id="exampleInputPassword1" 
-                            placeholder="Senha" 
+                            placeholder="Senha"
+                            {...register("password")}
                         />
+                        <p className="text-danger mx-0 my-2">
+                            {errorPassword}
+                        </p>
                     </div>
-                    <button type="button" className="btn btn-sm btn-primary my-2 w-100" onClick={login}>Conecte-se</button>
-                    <button type="button" className="btn btn-sm btn-primary my-2 w-100" onClick={createUser}>Cadastre-se</button>
+                    <button type="button" className="btn btn-sm btn-primary my-2 w-100" onClick={handleSubmit(login)}>Conecte-se</button>
+                    <button type="submit" className="btn btn-sm btn-primary my-2 w-100" >Cadastre-se</button>
                 </form>
+
                 </div>
 
                 <div className="container fixed-top mt-5 pt-5">
