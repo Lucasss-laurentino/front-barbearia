@@ -16,7 +16,7 @@ interface Props {
     setBarberEdit: (barber: Barber) => void,
 }
 
-export default function Card({ barbers, hours, setHours, setHourReserved, setBarberReserved, setBarbers, setModalEditBarber, setBarberEdit}: Props) {
+export default function Card({ barbers, hours, setHours, setHourReserved, setBarberReserved, setBarbers, setModalEditBarber, setBarberEdit }: Props) {
 
 
 
@@ -51,12 +51,20 @@ export default function Card({ barbers, hours, setHours, setHourReserved, setBar
         })
     }
 
-   const openModalSendBarber = (barber: Barber) => {
-        
+    const openModalSendBarber = (barber: Barber) => {
+
         setBarberEdit(barber)
         setModalEditBarber()
 
-   }
+    }
+
+    const deleteHour = (hourId: number) => {
+        
+        http.delete('deleteHour/'+hourId).then((response) => {
+            setHours([...response.data]);
+        })
+    
+    }
 
     return (
 
@@ -72,6 +80,7 @@ export default function Card({ barbers, hours, setHours, setHourReserved, setBar
                 {barbers.map((barber) => {
                     return (
                         <div className="card cards-assets mt-3 mx-2" key={barber.id}>
+                            {sessionStorage.getItem('adm') === '1' ?
                             <div className="d-flex bg-primary justify-content-end">
                                 <button className='bg-primary text-danger border border-primary' onClick={() => deleteBarber(barber.id)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -85,7 +94,7 @@ export default function Card({ barbers, hours, setHours, setHourReserved, setBar
                                         <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                                     </svg>
                                 </button>
-                            </div>
+                            </div> : ''}
                             <div className="card-header bg-primary d-flex justify-content-around align-items-center">
                                 <img className="card-img-fluid border rounded-circle" width='120' height='120' src={'http://127.0.0.1:8000/storage/' + barber.perfil} alt="Card image cap" />
                                 <p className='m-0 text-white'>{barber.name}</p>
@@ -97,13 +106,26 @@ export default function Card({ barbers, hours, setHours, setHourReserved, setBar
                                     {hours.map((hour) => {
                                         if (hour.barber_id === barber.id && !hour.reserved) {
                                             return (
-                                                <li className="list-group-item text-center ponteiro" key={hour.id} onClick={() => reserve(hour.id)} >{hour.time}</li>
+                                                <li className="list-group-item text-center ponteiro w-100 d-flex justify-content-center align-items-center" key={hour.id}>
+                                                    {sessionStorage.getItem('adm') === '1' ?
+                                                    <div className='mx-2'>
+                                                        <button className='bg-white text-danger border border-white' onClick={() => deleteHour(hour.id)}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                                                            </svg>
+                                                        </button>
+                                                    </div> : ''}
+                                                    <div className='w-100 mx-2' onClick={() => reserve(hour.id)} >
+                                                        {hour.time}
+                                                    </div>
+                                                </li>
                                             );
                                         }
                                     })}
                                 </ul>
 
-                                <button className='btn btn-sm bg-white w-100 my-3' onClick={() => openModalAndSendBarberId(barber.id)}>+Hora</button>
+                                {sessionStorage.getItem('adm') === '1' ?
+                                <button className='btn btn-sm bg-white w-100 my-3' onClick={() => openModalAndSendBarberId(barber.id)}>+Hora</button> : ''}
 
                             </div>
                         </div>

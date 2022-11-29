@@ -16,14 +16,20 @@ export default function ModalCreateHour({ show, onHide, barberId, setHours }: Pr
     // State to time
     const [time, setTime] = useState('');
 
+    const [error, setError] = useState('')
+
     const createHour = () => {
 
-
-        http.post('createHour', {time, barberId}).then((response) => {
-            setHours([...response.data])
-            setTime('')
-            onHide()
-        })
+        if(time){
+            http.post('createHour', {time, barberId}).then((response) => {
+                setHours([...response.data])
+                setTime('')
+                setError('')
+                onHide()
+            })    
+        } else {
+            setError('Verifique se o campo está preenchido corretamente')
+        }
     }
 
     return (
@@ -45,6 +51,9 @@ export default function ModalCreateHour({ show, onHide, barberId, setHours }: Pr
                         <input type="time" value={time} onChange={(time) => setTime(time.target.value)} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
                     </div>
                     <button type="button" className="btn btn-primary w-100" onClick={createHour} >Cadastrar Hora</button>
+                    <p className="text-center text-danger mx-0 my-2">
+                        {error}
+                    </p>
                 </form>
             </Modal.Body>
         </Modal>

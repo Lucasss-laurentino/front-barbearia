@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import './Navbar.css';
 
 interface Props {
@@ -33,8 +34,8 @@ export default function Navbar({show, setModalHourReserved}: Props) {
                     </li>
             
                     <li className="nav-item">
-            
-                    <button className="nav-link bg-primary border border-primary text-white" onClick={show}>+Barbeiro</button>
+
+                    {sessionStorage.getItem('adm') === '1' ? <button className="nav-link bg-primary border border-primary text-white" onClick={show}>+Barbeiro</button> : ''}
             
                     </li>
             
