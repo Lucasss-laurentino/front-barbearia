@@ -8,6 +8,7 @@ import Barber from '../../interfaces/Barber';
 import Hours from '../../interfaces/Hours';
 import ModalHourReserved from '../../components/ModalHourReserved';
 import ModalEditBarber from '../../components/ModalEditBarber';
+import Footer from '../../components/Footer';
 
 export default function Index() {
 
@@ -104,6 +105,8 @@ export default function Index() {
             setModalEditBarber={() => setModalEditBarber(true)}
             setBarberEdit={(barber) => setBarberEdit(barber)}
         />
+
+        <Footer />
 
     </>
 
