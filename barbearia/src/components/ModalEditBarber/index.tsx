@@ -7,15 +7,62 @@ import './ModalEditBarber.css';
 interface Props {
     modalEditBarber: boolean,
     setModalEditBarber: () => void,
-    barberEdit: Barber | undefined
+    barberEdit: Barber | undefined,
+    setBarbers: (barber: Barber[]) => void,
 }
 
-export default function ModalEditBarber({modalEditBarber, setModalEditBarber, barberEdit}: Props) {
+export default function ModalEditBarber({modalEditBarber, setModalEditBarber, barberEdit, setBarbers}: Props) {
 
     const [name, setName] = useState(''); // Colocar nome do barbeiro nesse state
     const [image, setImage] = useState<File | null>();
     const [erroSendData, setErroSendData] = useState('');
 
+    useEffect(() => {
+
+        if(barberEdit){
+            setName(barberEdit.name);
+        }
+
+    }, [barberEdit])
+
+    const editBarber = (event: React.FormEvent<HTMLFormElement>) => {
+
+        event.preventDefault();
+
+        if (barberEdit) {
+
+            if(image && name) {
+                
+                const formData = new FormData();
+
+                formData.append('name', name);
+                formData.append('image', image);
+                formData.append('id', JSON.stringify(barberEdit.id));
+
+                http.request({
+                    
+                    url: 'editBarber',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    data: formData
+
+                }).then((response) => {
+                    setBarbers([...response.data[1]]);
+                    setModalEditBarber();
+                })
+            
+            } else {
+                setErroSendData('Verifique se todos os campos estão preenchidos corretamente')
+            }
+
+
+        } else {
+
+        }
+        
+    }
 
     const selectFile = (file: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -25,13 +72,6 @@ export default function ModalEditBarber({modalEditBarber, setModalEditBarber, ba
         } else {
             setImage(null);
         }
-
-    }
-
-    const editBarber = (event: React.FormEvent<HTMLFormElement>) => {
-        
-        event.preventDefault();
-
 
     }
 
@@ -55,11 +95,11 @@ export default function ModalEditBarber({modalEditBarber, setModalEditBarber, ba
                 
                 <div className="form-group transparencia">
                     <label htmlFor="exampleInputEmail1">Name</label>
-                    <input type="email" value={barberEdit?.name} onChange={(valor) => setName(valor.target.value)} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Seu nome" />
+                    <input type="text" value={name} onChange={(valor) => setName(valor.target.value)} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Seu nome" />
                 </div>
                 <div className="form-group transparencia mt-3">
                     <label htmlFor="exampleFormControlFile1">Escolha uma imagem</label>
-                    <input type="file" onChange={(file) => selectFile(file)} className="form-control-file" id="exampleFormControlFile1" />
+                    <input type="file"  onChange={(file) => selectFile(file)} className="form-control-file" id="exampleFormControlFile1" />
                 </div>
                 <button type="submit" className="btn btn-primary transparencia mt-3 w-100 transparencia-button">Cadastrar Barbeiro</button>
             </form>            

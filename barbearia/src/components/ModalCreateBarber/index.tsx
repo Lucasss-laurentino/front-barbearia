@@ -1,4 +1,7 @@
 import './Modal.css';
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import {object, string} from 'yup';
 import Modal from 'react-bootstrap/Modal';
 import React, { useEffect, useState } from 'react';
 import http from '../../http';
@@ -8,27 +11,31 @@ interface Props {
     show: boolean,
     onHide: () => void,
     setBarbers: (barbers: Barber[]) => void,
-    barberEdit: Barber | undefined,
-    setBarberEdit: (barber: Barber | undefined) => void,
-
 }
 
+const schema = object({
+    name: string().required("Campo obrigatório").min(3, "Nome muito curto"),
+})
 
-export default function ModalCreateBarber({ show, barberEdit, onHide, setBarbers, setBarberEdit }: Props) {
+export default function ModalCreateBarber({ show, onHide, setBarbers }: Props) {
 
+    const { register, reset, handleSubmit, watch, formState: { errors } } = useForm({resolver: yupResolver(schema)});
+
+    const [errorName, setErrorName] = useState<any>();
+    
     useEffect(() => {
 
-        if(barberEdit){
-            setName(barberEdit.name)
+        if(errors?.name?.message) {
+            setErrorName(errors?.name?.message);
+        } else {
+            setErrorName('');
         }
 
-    }, [barberEdit])
 
-    //  State to inputs
-    const [name, setName] = useState<string>('');
-    
+    }, [errors?.name?.message])
+
+    //  State to input file    
     const [image, setImage] = useState<File | null>();
-
 
     // State error on submit
     const [erroSendData, setErroSendData] = useState('');
@@ -47,78 +54,42 @@ export default function ModalCreateBarber({ show, barberEdit, onHide, setBarbers
 
     }
 
-    // Create barber or edit
-    const createBarberOrEdit = (event: React.FormEvent<HTMLFormElement>) => {
+    const createBarber = (dataForm: any) => {
 
-        event.preventDefault();
+        if (image && dataForm.name) {
 
-        if (barberEdit) {
+            const data = new FormData();
 
-            if(image && name) {
-                
-                const formData = new FormData();
+            data.append('name', dataForm?.name);
+            data.append('image', image)
 
-                formData.append('name', name);
-                formData.append('image', image);
-                formData.append('id', JSON.stringify(barberEdit.id));
+            http.request({
+                url: 'createBarber',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'mulltipart/form-data'
+                },
+                data: data
+            }).then((response) => {
 
-                http.request({
-                    
-                    url: 'editBarber',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    data: formData
+                setImage(null);
+                setErroSendData('')
+                setBarbers([...response.data[1]]);
+                reset();
+                onHide();
 
-                }).then((response) => {
-                    setBarberEdit(response.data[0]);
-                    setBarbers([...response.data[1]]);
-                    onHide();
-                })
-            
-            }
+            })
 
 
         } else {
-
-            if (image && name) {
-
-                const data = new FormData();
-
-                data.append('name', name);
-                data.append('image', image)
-
-                http.request({
-                    url: 'createBarber',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'mulltipart/form-data'
-                    },
-                    data: data
-                }).then((response) => {
-
-                    setName('');
-                    setImage(null);
-                    setErroSendData('')
-                    setBarbers([...response.data[1]]);
-                    onHide();
-
-                })
-
-
-            } else {
-                setErroSendData('Erro ao cadastrar barbeiro, verifique se todos os campos foram preenchidos')
-            }
+            setErroSendData('Erro ao cadastrar barbeiro, verifique se todos os campos foram preenchidos')
         }
-
 
     }
 
     const cleanAndOnHide = () => {
+        reset();
         onHide();
-        setBarberEdit(undefined);
-        setName('')
     }
 
     return (
@@ -131,18 +102,35 @@ export default function ModalCreateBarber({ show, barberEdit, onHide, setBarbers
         >
             <Modal.Header closeButton onHide={cleanAndOnHide}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    {barberEdit ? 'Editar barbeiro' : 'Cadastre um barbeiro'}
+                    {'Cadastre um barbeiro'}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <form className='imagem-de-fundo mb-4' onSubmit={createBarberOrEdit}>
+                <form className='imagem-de-fundo mb-4' onSubmit={handleSubmit(createBarber)}>
                     <div className="form-group transparencia">
                         <label htmlFor="exampleInputEmail1">Name</label>
-                        <input type="text" value={name} onChange={(valor) => setName(valor.target.value)} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Seu nome" />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="exampleInputEmail1" 
+                            aria-describedby="emailHelp" 
+                            placeholder="Seu nome" 
+                            {...register("name")}
+                        />
+                        <p className="text-danger mx-0 my-2">
+                            {errorName}
+                        </p>
                     </div>
                     <div className="form-group transparencia mt-3">
                         <label htmlFor="exampleFormControlFile1">Escolha uma imagem</label>
-                        <input type="file" className="form-control-file" id="exampleFormControlFile1" onChange={selectImage} />
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            className="form-control-file" 
+                            id="exampleFormControlFile1" 
+                            onChange={selectImage} 
+                            required
+                        />
                     </div>
                     <button type="submit" className="btn btn-primary transparencia mt-3 w-100 transparencia-button">Cadastrar Barbeiro</button>
                 </form>
