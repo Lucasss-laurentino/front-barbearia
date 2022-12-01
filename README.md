@@ -30,6 +30,8 @@
 
 <p>- Cadastro e exclusão de hora</p>
 
+![hora](https://user-images.githubusercontent.com/96303722/205080780-aeaa246d-e96a-4546-ad90-b3419bf0d0b3.gif)
+
 ### Rodando o projeto
 
 #### Para instalar todas dependências do projeto execute
