@@ -21,6 +21,8 @@
 
 <p>- Autenticação via token jwt marcação e desmarcação de horario</p>
 
+![hora-user](https://user-images.githubusercontent.com/96303722/205087092-a52acecb-1dc9-49ac-b857-d2f1195e6cc8.gif)
+
 ### Painel administrativo
 
 <p>- Cadastro, exclusao e edição de barbeiro</p>
