@@ -26,7 +26,7 @@
 
 <p>- Cadastro, exclusao e edição de barbeiro</p>
 
-
+![crudBarbeiro](https://user-images.githubusercontent.com/96303722/205078964-437041b0-369d-458d-8718-79ac870be979.gif)
 
 <p>- Cadastro e exclusão de hora</p>
 
