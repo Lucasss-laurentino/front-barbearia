@@ -1,5 +1,7 @@
 # Barbearia agendamento de horários
 
+<p>Esse projeto consome essa <a href='https://github.com/Lucasss-laurentino/barbearia-api'>api</a>
+
 ### Tecnologias utilizadas
 
 <div>
