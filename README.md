@@ -19,8 +19,7 @@
 ![cadastrando-usuario](https://user-images.githubusercontent.com/96303722/205068642-8ffd5b61-18b6-4b37-9738-7ca155819d9d.gif)
 
 
-<p>- Autenticação via token jwt</p>
-<p>- Marcação e desmarcação de horario</p>
+<p>- Autenticação via token jwt marcação e desmarcação de horario</p>
 
 ### Painel administrativo
 
