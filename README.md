@@ -25,6 +25,9 @@
 ### Painel administrativo
 
 <p>- Cadastro, exclusao e edição de barbeiro</p>
+
+![cadastrando-barbeiro](https://user-images.githubusercontent.com/96303722/205074684-e182d3e8-0123-4995-94a4-a861d807d0ca.gif)
+
 <p>- Cadastro e exclusão de hora</p>
 
 ### Rodando o projeto
