@@ -2,7 +2,11 @@
 
 ### Tecnologias utilizadas
 
-<p>- React + typescript</p>
+<div>
+  <img alt='react' src='https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB' />
+  +
+</div>
+<p>- typescript</p>
 <p>- Html e Css</p>
 
 ### Funcionalidades para usuários
@@ -19,4 +23,10 @@
 <p>- Cadastro, exclusao e edição de barbeiro</p>
 <p>- Cadastro e exclusão de hora</p>
 
-### Instalando o projeto
+### Rodando o projeto
+
+#### Para instalar todas dependências do projeto execute
+<p>npm i ou npm install</p>
+
+#### Para executar o projeto
+<p>npm start</p>
